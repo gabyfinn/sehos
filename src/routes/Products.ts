@@ -29,7 +29,7 @@ router.get('/id/:id', async (req: Request, res: Response, next: NextFunction) =>
 })
 
 
-router.get('/dashboard',/* userExtractorAdmin, */ async (req: Request, res: Response, next: NextFunction) => {
+router.post('/dashboard',/* userExtractorAdmin, */ async (req: Request, res: Response, next: NextFunction) => {
   try {
     const {time, category} = req.body
     var products = await getProductsAdmin(time, category);
