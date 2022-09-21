@@ -41,7 +41,7 @@ server.use(bodyParser.json({ limit: '50mb' }));
 server.use(cookieParser());
 server.use(morgan('dev'));
 //server.use(allowCors)
-server.use(cors({ credentials: true, origin: 'https://sehos-client.vercel.app', methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'] }));
+server.use(cors({ credentials: true, origin: 'https://sehos.netlify.app', methods: ['GET', 'PUT', 'POST', 'PATCH', 'DELETE'] }));
 // server.use((_req: Request, res: Response, next: NextFunction) => {
 //   res.header('Access-Control-Allow-Origin', '*'); // update to match the domain you will make the request from
 //   res.header('Access-Control-Allow-Credentials', 'true');

@@ -9,7 +9,7 @@ const sender = {
 	email: 'sohes2022@hotmail.com',
 };
 
-const URL = 'https://sehos-client.vercel.app';
+const URL = 'https://sehos.netlify.app';
 
 export const sendEmailInstructions = (email: string, subject: string, id: number, user: string) => {
 	const receiver = [{ email }];
