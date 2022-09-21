@@ -4,12 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev2": "ts-node-dev app2.ts",
-    "start": "node ./build/index.js",
-    "dev": "ts-node-dev index.ts",
-    "build": "tsc",
-    "test": "mocha -w ./tests/**/*.spec.js",
-    "postinstall": "npm run build"
+    "start": "node build/index.js",
+    "postinstall": "tsc",
+    "watch-ts": "tsc -w",
+    "deploy": "git add . && git commit -m Heroku && git push heroku master"
+    
   },
   "author": "Jesner Ramirez, Gabriel Uzzante, Facundo Juliá, Joel Orzet, Ignacio Dalla Rizza, Andres Fabian Parra Sanchez, Rodrigo Ruiz",
   "license": "Sin Licencia",
