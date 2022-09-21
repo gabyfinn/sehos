@@ -67,7 +67,7 @@ import { createImages } from './Images';
 //*   "id": 3,                              (ID del producto)
 //* }
 
-function formatValueProduct(products: any) {
+export function formatValueProduct(products: any) {
   products = JSON.parse(JSON.stringify(products, null, 2))
   for (var vProduct of products) {
     var details = vProduct.details[0]
