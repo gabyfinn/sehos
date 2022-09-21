@@ -3,7 +3,7 @@ import { Op } from "sequelize" */
 
 /* import { where } from 'sequelize/types'; */
 
-import { Products } from '../db';
+import { Category, Color, Images, Products, Product_details, Sizes, Users } from '../db';
 import { ProductsI } from '../types';
 
 export const getProducts = async (product: string): Promise<any> => {
@@ -15,7 +15,14 @@ export const getProducts = async (product: string): Promise<any> => {
 		const filtrados: Array<any> = data.filter((p: any) =>
 			p.name.toLowerCase().includes(product.toLowerCase())
 		); */
-		const filtrados: any = await Products.findAll()
+		const filtrados: any = await Products.findAll({
+			order: [
+			  ['details', Sizes, 'size', 'ASC'],
+			  ['id', 'ASC'],
+			], include: [Users, Category,  {
+			  model: Product_details, as: 'details', include: [Color, Images, Sizes]}] , attributes: {exclude: ['buy_price']
+			}
+		  })
 		let exp = new RegExp(product.toLowerCase());
 		/* console.log("Entre al al title"); */
 		let result = filtrados?.filter((e: ProductsI) => exp.test(e.name.toLowerCase()));
