@@ -5,6 +5,7 @@ import { Op } from "sequelize" */
 
 import { Category, Color, Images, Products, Product_details, Sizes, Users } from '../db';
 import { ProductsI } from '../types';
+import { formatValueProduct } from './Products';
 
 export const getProducts = async (product: string): Promise<any> => {
 	try {
@@ -26,9 +27,11 @@ export const getProducts = async (product: string): Promise<any> => {
 		let exp = new RegExp(product.toLowerCase());
 		/* console.log("Entre al al title"); */
 		let result = filtrados?.filter((e: ProductsI) => exp.test(e.name.toLowerCase()));
+		
 		if (!result) throw new Error(`Theres no coincidence for ${product}`);
+		var productValuesFormat = formatValueProduct(result)
 
-		return result;
+		return productValuesFormat;
 	} catch (error: any) {
 		return [];
 	}
