@@ -14,7 +14,7 @@ var configSequelize = {
     },
   },
 }
-export const sequelize = new Sequelize(String(process.env.DATABASE_URL), configSequelize)
+export const sequelize = new Sequelize(String(process.env.DATABASE), configSequelize)
 
 export const {
   Product_details_size,
