@@ -86,7 +86,12 @@ function formatValueProduct(products: any) {
   }
   return products
 }
-
+export const deleteProductPermanente = async (id:any): Promise<any> => {
+  const eliminar = await Products.findByPk(id)
+  if(eliminar){
+    await eliminar.destroy()
+  }
+}
 export const getProducts = async (): Promise<any> => {
   // Temporal para cambiar los Fall to Autumn
   // Se trae todas las imagenes para el Slider
@@ -106,17 +111,17 @@ export const getProducts = async (): Promise<any> => {
 
 interface Months {
   Jan: number,
-   Feb: number,
-   Mar:number,
-   Apr:number,
-   May:number,
-   Jun:number,
-   Jul:number,
-   Aug:number,
-   Sep: number,
-   Oct:number,
-   Nov:number,
-   Dec:number
+    Feb: number,
+    Mar:number,
+    Apr:number,
+    May:number,
+    Jun:number,
+    Jul:number,
+    Aug:number,
+    Sep: number,
+    Oct:number,
+    Nov:number,
+    Dec:number
 }
 
 export const getProductsAdmin = async (time: string, categoria: string): Promise<any> => {
@@ -196,8 +201,7 @@ export const createProducts = async (req: any): Promise<any> => {
 }
 
 export const updateProducts = async (value: any): Promise<any> => {
-  // Se busca el usuario por id
-  console.log('esto es el update', value);
+
   var productByID = await Products.findByPk(value.id)
   if (productByID !== null) {
     productByID.set(value)

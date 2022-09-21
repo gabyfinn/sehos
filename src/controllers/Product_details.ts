@@ -20,7 +20,7 @@ export const createP_Details = async (value: any): Promise<any> => {
   return nP_Details
 }
 
-export const updateP_Details = async (value: any): Promise<any> => {
+export const updateStock = async (value: any): Promise<any> => {
   // Se busca el usuario por id
   var p_DetailByID = await Product_details.findOne({
     where: {
@@ -30,6 +30,23 @@ export const updateP_Details = async (value: any): Promise<any> => {
   if (p_DetailByID !== null) {
     p_DetailByID.set(value.details);
     await p_DetailByID.save();
+    return p_DetailByID
+  }
+  return { message: `we couldn't find the product details for the id: ${value.id}.` };
+}
+
+export const updateP_Details = async (value: any): Promise<any> => {
+  // Se busca el usuario por id
+  var p_DetailByID:any = await Product_details.findOne({
+    where: {
+      id_product: value.id
+    },
+  })
+  if (p_DetailByID !== null) {
+    for (const val of value.details.size) {
+      // toma el producto anteriormente creado y añade tallas con el stock de cada uno.
+      await p_DetailByID.addSizes(val.id, { through: { stock: val.stock } })
+    }
     return p_DetailByID
   }
   return { message: `we couldn't find the product details for the id: ${value.id}.` };
