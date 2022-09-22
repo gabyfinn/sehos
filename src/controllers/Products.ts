@@ -4,6 +4,7 @@ import { Category, Color, Images, Orders, Orders_details, Products, Product_deta
 import { createImages } from './Images';
 // import { createP_Details } from './Product_details';
 
+
 //* README *
 //* LAS OPCIONES DE AGREGAR, ACTUALIZA, ELIMINAR, SOLO ESTAN DISPONIBLES PARA EL USUARIO DE NIVEL ADMINISTRADOR
 //* GET http://localhost:3001/carrousel/ = Lista de todas las imagenes para el carrousel [Slider] (isActive=true)
@@ -160,12 +161,13 @@ export const getProductsAdmin = async (time: string, category: string): Promise<
          order.dif = difDias
          item.totalVentas = totalVentas
          return time === 'Desde el principio' ? (order.Order.order_state === 'Fulfilled') : 
-          (order.dif < Number(time) && (order.Order.order_state === 'Fulfilled')) ? true : false
+          (order.dif < Number(time) && (order.Order.order_state === 'Fulfilled')) 
         })
         return item
     })
+    filtro = filtro
   
-    return category !== '' ?  filtro.filter((item: any) => item.Category.category === category) : filtro
+    return category !== 'Todas las categorias' ?  (filtro.filter((item: any) => item.Category.category === category).sort((productA: any, productB: any) => (productB.totalVentas - productA.totalVentas)) ): filtro.sort((productA: any, productB: any) => (productB.totalVentas - productA.totalVentas)  )
 }
 
   
