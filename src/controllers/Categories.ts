@@ -15,8 +15,9 @@ export const postCategory = async (value: any): Promise<object> => {
   if (Object.prototype.toString.call(value) === '[object Array]') {
     if (value[0].hasOwnProperty('category')) {
       try {
-        return await Category.bulkCreate(value)
+        await Category.bulkCreate(value)
       } catch (error) {
+        console.log(error);
         return { message: "Please try not to type info that already exists. Verify" }
       }
     } else {

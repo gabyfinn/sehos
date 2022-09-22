@@ -65,7 +65,7 @@ router.get('/all', async (_req: Request, res: Response, next: NextFunction) => {
     next(e)
   }
 })
-router.post('/', userExtractorAdmin, async (req: Request, res: Response, next: NextFunction) => {
+router.post('/', async (req: Request, res: Response, next: NextFunction) => {
   try {
     var nSize = await createSize(req.body)
     res.json(nSize)

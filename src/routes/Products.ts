@@ -1,12 +1,19 @@
 'use strict'
 // se requiere el models
 import { Router, Request, Response, NextFunction } from 'express';
-import { getProducts, createProducts, updateProducts, deleteProducts, getProductsAdmin, getProductById } from '../controllers/Products';
+import { getProducts, createProducts, updateProducts, deleteProducts, getProductsAdmin, getProductById, deleteProductPermanente } from '../controllers/Products';
 import { userExtractorAdmin } from '../middleware/userExtractor';
 import fileUpload from 'express-fileupload'
 const router = Router();
 
-
+router.delete('/permanente/:id', async (req: Request, res: Response) => {
+  try {
+    await deleteProductPermanente(req.params.id)
+    res.send('eliminado')
+  } catch (error) {
+    console.log(error);
+  }
+})
 router.get('/', async (_req: Request, res: Response, next: NextFunction) => {
   try {
     var products = await getProducts();
@@ -18,20 +25,19 @@ router.get('/', async (_req: Request, res: Response, next: NextFunction) => {
 
 router.get('/id/:id', async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {id} = req.params
-    console.log(id)
-     const product = await getProductById(Number(id))
-     res.json(product)
+    const { id } = req.params
+    const product = await getProductById(Number(id))
+    res.json(product)
   } catch (error) {
     next(error)
-  } 
-  
+  }
+
 })
 
 
 router.post('/dashboard',/* userExtractorAdmin, */ async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const {time, category} = req.body
+    const { time, category } = req.body
     var products = await getProductsAdmin(time, category);
     res.json(products)
   } catch (e) {
@@ -43,10 +49,9 @@ router.post('/dashboard',/* userExtractorAdmin, */ async (req: Request, res: Res
 
 router.post('/', /* userExtractorAdmin, */ fileUpload({ useTempFiles: true, tempFileDir: './src/uploads' }), async (req: Request, res: Response, _next: NextFunction) => {
   try {
-    console.log(req.files);
     var nProducts: string = await createProducts(req)
     res.json(nProducts)
-  } catch (e:any) {
+  } catch (e: any) {
     // next(e)
     res.send(e.message)
   }
@@ -62,7 +67,6 @@ router.put('/', userExtractorAdmin, async (req: Request, res: Response, next: Ne
 })
 router.delete('/', /* userExtractorAdmin, */ async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log(req.body.id)
     var delProducts = await deleteProducts(req.body.id)
     res.json(delProducts)
   } catch (e) {
