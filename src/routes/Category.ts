@@ -33,7 +33,7 @@ Category.get('/', async (_req: Request, res: Response, next: NextFunction) => {
   }
 })
 
-Category.post('/', userExtractorAdmin, async (req: Request, res: Response, next: NextFunction) => {
+Category.post('/', /*userExtractorAdmin*/ async (req: Request, res: Response, next: NextFunction) => {
   try {
     const createdCategory = await postCategory(req.body)
     if (createdCategory) {
