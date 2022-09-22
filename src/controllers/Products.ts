@@ -1,8 +1,9 @@
 "use strict"
 // se requiere el models
-import { Category, Color, Images, Orders_details, Products, Product_details, Sizes, Users } from '../db';
+import { Category, Color, Images, Orders, Orders_details, Products, Product_details, Sizes, Users } from '../db';
 import { createImages } from './Images';
 // import { createP_Details } from './Product_details';
+
 
 //* README *
 //* LAS OPCIONES DE AGREGAR, ACTUALIZA, ELIMINAR, SOLO ESTAN DISPONIBLES PARA EL USUARIO DE NIVEL ADMINISTRADOR
@@ -124,7 +125,7 @@ interface Months {
     Dec:number
 }
 
-export const getProductsAdmin = async (time: string, categoria: string): Promise<any> => {
+export const getProductsAdmin = async (time: string, category: string): Promise<any> => {
   // Temporal para cambiar los Fall to Autumn
   // Se trae todas las imagenes para el Slider
   const months: Months = {
@@ -143,29 +144,35 @@ export const getProductsAdmin = async (time: string, categoria: string): Promise
 
   }
 
-  var products = await Products.findAll({ include: [Users, Category, Orders_details, { model: Product_details, as: 'details', include: [Color, Images, Sizes ] }] })
+  var products:any = await Products.findAll({ include: [ Category,{model:Orders_details, include:[Orders]}, { model: Product_details, as: 'details', include: [Color, Images, Sizes ] }] })
+  
+
   var productValuesFormat = formatValueProduct(products)
   let filtro;
 
-    filtro = productValuesFormat.map(( item: any ) => 
-    {
-      item.orders_details = item.orders_detail.filter(( order:any ) => {
-         const t = order.time.split('-')
-         let totalVentas = 0;
-         totalVentas += order.total
+  
+  filtro = productValuesFormat.map(( item: any ) => 
+  {
+      let totalVentas = 0;
+
+      item.Orders = item.Orders_details.filter(( order:any ) => {
+        
+        const t =  order.Order.purchase_date.split('-')
+        totalVentas += Number(order.Order.total_ammount)
          const toDay = Date().split(' ');
          const difAño = (Number(toDay[3]) - Number(t[0]))
          const difMes = (months[toDay[1] as keyof Months] +( 12 * difAño)) -  Number(t[1])
          const difDias =  Number(toDay[2]) + (30 * difMes) - Number(t[2])
          order.dif = difDias
          item.totalVentas = totalVentas
-         return time === 'Desde el principio' ? order.order_state === 'Fulfilled' : 
-          (order.dif < Number(time) && (order.order_state === 'Fulfilled')) /* ? true : false */
+         return time === 'Desde el principio' ? (order.Order.order_state === 'Fulfilled') : 
+          (order.dif < Number(time) && (order.Order.order_state === 'Fulfilled')) 
         })
         return item
     })
+    filtro = filtro
   
-    return categoria !== '' ?  filtro.filter((item: any) => item.Category.category === categoria) : filtro
+    return category !== 'Todas las categorias' ?  (filtro.filter((item: any) => item.Category.category === category).sort((productA: any, productB: any) => (productB.totalVentas - productA.totalVentas)) ): filtro.sort((productA: any, productB: any) => (productB.totalVentas - productA.totalVentas)  )
 }
 
   
